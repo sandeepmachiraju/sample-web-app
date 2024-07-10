@@ -1,0 +1,16 @@
+{
+  "name": "sample-web-app",
+  "version": "1.0.0",
+  "description": "A Node.js sample web application with Docker support",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "axios": "^0.25.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "helmet": "^4.6.0",
+    "morgan": "*"
+  }
+}

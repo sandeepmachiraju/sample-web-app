@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>API Request Example</title>
+</head>
+<body>
+  <h1 id="hello-message"></h1>
+  <h2>API Response:</h2>
+  <pre id="api-response"></pre>
+
+  <script>
+    const API_HOSTNAME = '__API_HOSTNAME__'; // Placeholder to be replaced by the server
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // First API call to get the Hello Node message
+      fetch('/api/hello', { credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('hello-message').textContent = data.message;
+        })
+        .catch(error => {
+          document.getElementById('hello-message').textContent = `Error: ${error.message}`;
+        });
+
+      // Second API call after some time (e.g., 5 seconds)
+      setTimeout(() => {
+        fetch(`http://samplewebapp.acmeone.internal2.access.ubyon.com:80/api/todos`, { credentials: 'include', mode: 'cors' })
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('api-response').textContent = JSON.stringify(data, null, 2);
+          })
+          .catch(error => {
+            document.getElementById('api-response').textContent = `Error: ${error.message}`;
+          });
+      }, 5000); // 5 seconds delay
+    });
+  </script>
+</body>
+</html>
+
