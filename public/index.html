@@ -3,18 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>API Request Example</title>
 </head>
 <body>
-  <h1 id="hello-message"></h1>
-  <h2>API Response:</h2>
-  <pre id="api-response"></pre>
+	<h3> Relative paths API call: /api/hello </h3>
+  <h4> API Response: </h4> <pre id = "hello-message"> </pre>
+  <br/>
+  
+  <h3> Hardcoded paths API call (without Access-Control-Allow-Origin header): <br/><small><span id = "hardcoded-hostname1"></span>/api/todos</small> </h3>
+  <h4> API Response: </h4> <pre id = "api-response1"> </pre>
+  <br/>
+
+  <h3> Hardcoded paths API call (with Access-Control-Allow-Origin as the requested origin i.e., 'null'): <br/><small><span id = "hardcoded-hostname2"></span>/api/todos (2secs delay)</small> </h3>
+	  <h4>API Response: </h4> <pre id="api-response2"></pre>
 
   <script>
-    const API_HOSTNAME = '__API_HOSTNAME__'; // Placeholder to be replaced by the server
 
     document.addEventListener('DOMContentLoaded', () => {
+      var hardcoded_hostname = "http://" + window.location.hostname;
+      document.getElementById('hardcoded-hostname1').textContent = hardcoded_hostname;
+      document.getElementById('hardcoded-hostname2').textContent = hardcoded_hostname;
+      
       // First API call to get the Hello Node message
       fetch('/api/hello', { credentials: 'include' })
         .then(response => response.json())
@@ -24,18 +33,28 @@
         .catch(error => {
           document.getElementById('hello-message').textContent = `Error: ${error.message}`;
         });
+      
+      // Second API call to check if we can call without cors headers
+      fetch(`${hardcoded_hostname}/api/without-cross-origin-null-headers`, { credentials: 'include', mode: 'cors' })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('api-response1').textContent = data.message;
+        })
+        .catch(error => {
+          document.getElementById('api-response1').textContent = `Error: ${error.message}`;
+        });
 
-      // Second API call after some time (e.g., 5 seconds)
+      // Second API call after some time (e.g., 2 seconds)
       setTimeout(() => {
-        fetch(`http://samplewebapp.acmeone.internal2.access.ubyon.com:80/api/todos`, { credentials: 'include', mode: 'cors' })
+        fetch(`${hardcoded_hostname}/api/with-cross-origin-null-headers`, { credentials: 'include', mode: 'cors' })
           .then(response => response.json())
           .then(data => {
-            document.getElementById('api-response').textContent = JSON.stringify(data, null, 2);
+            document.getElementById('api-response2').textContent = JSON.stringify(data, null, 2);
           })
           .catch(error => {
-            document.getElementById('api-response').textContent = `Error: ${error.message}`;
+            document.getElementById('api-response2').textContent = `Error: ${error.message}`;
           });
-      }, 5000); // 5 seconds delay
+      }, 2000); // 2 seconds delay
     });
   </script>
 </body>
